@@ -1,4 +1,4 @@
-## Database-connected mail sender in WPF
+# Database-connected mail sender in WPF
 Prosta aplikacja WPF połączona z bazą danych służąca do wysyłania wiadomości email
 
 Aplikacja pozwala na wysyłanie wiadomości email i dołączenia do niej wybranego obrazu z naszego komputera, do wskazanych użytkowników z bazy danych.
@@ -9,4 +9,4 @@ Aplikacja może posłużyć firmie np do szybkiego wysyłania newsletterów do u
 
 Kod programu znajduje się w pliku projektInformatyczny.sln, przeznaczonego do otwarcia np w Visual Studio.
 
-# Kod programu od strony mechaniki działania aplikacji (backend) znajduje się w pliku o nazwie "kod aplikacji". Można go tam podejrzeć bez potrzeby otwierania plików w zewnętrznych programach.  
+## Kod programu od strony mechaniki działania aplikacji (backend) znajduje się w pliku o nazwie "kod aplikacji". Można go tam podejrzeć bez potrzeby otwierania plików w zewnętrznych programach.  
