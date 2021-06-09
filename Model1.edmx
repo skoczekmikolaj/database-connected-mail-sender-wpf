@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FirmaKursyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Klient">
+          <Key>
+            <PropertyRef Name="KlientID" />
+          </Key>
+          <Property Name="KlientID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Imię" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Nazwisko" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="NazwaFirmy" Type="nchar" MaxLength="100" />
+          <Property Name="NrTelefonu" Type="nchar" MaxLength="15" />
+          <Property Name="AdresMail" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="ZgodaNaNewsletter" Type="bit" Nullable="false" />
+          <Property Name="Adres" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="KursID" />
+          </Key>
+          <Property Name="KursID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NazwaKursu" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="TypID" Type="int" Nullable="false" />
+          <Property Name="Cena" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Typ">
+          <Key>
+            <PropertyRef Name="TypID" />
+          </Key>
+          <Property Name="TypID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NazwaTypu" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Zamowienie">
+          <Key>
+            <PropertyRef Name="ZamowienieID" />
+          </Key>
+          <Property Name="ZamowienieID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataZamowienia" Type="date" Nullable="false" />
+          <Property Name="CzyZrealizowane" Type="bit" Nullable="false" />
+          <Property Name="KlientID" Type="int" Nullable="false" />
+          <Property Name="KursID" Type="int" Nullable="false" />
+          <Property Name="CzyFaktura" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FirmaKursy.dbo.ZamowienieKlienta' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ZamowienieKlienta">
+          <Key>
+            <PropertyRef Name="ZamowienieID" />
+            <PropertyRef Name="KursID" />
+            <PropertyRef Name="Ilość" />
+            <PropertyRef Name="RabatProc" />
+          </Key>
+          <Property Name="ZamowienieID" Type="int" Nullable="false" />
+          <Property Name="KursID" Type="int" Nullable="false" />
+          <Property Name="Ilość" Type="int" Nullable="false" />
+          <Property Name="RabatProc" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Kurs_Typ">
+          <End Role="Typ" Type="Self.Typ" Multiplicity="1" />
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Typ">
+              <PropertyRef Name="TypID" />
+            </Principal>
+            <Dependent Role="Kurs">
+              <PropertyRef Name="TypID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Zamowienie_Klient">
+          <End Role="Klient" Type="Self.Klient" Multiplicity="1" />
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Klient">
+              <PropertyRef Name="KlientID" />
+            </Principal>
+            <Dependent Role="Zamowienie">
+              <PropertyRef Name="KlientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Zamowienie_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="KursID" />
+            </Principal>
+            <Dependent Role="Zamowienie">
+              <PropertyRef Name="KursID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ZamowienieKlienta_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="ZamowienieKlienta" Type="Self.ZamowienieKlienta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="KursID" />
+            </Principal>
+            <Dependent Role="ZamowienieKlienta">
+              <PropertyRef Name="KursID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ZamowienieKlienta_Zamowienie">
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="1" />
+          <End Role="ZamowienieKlienta" Type="Self.ZamowienieKlienta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zamowienie">
+              <PropertyRef Name="ZamowienieID" />
+            </Principal>
+            <Dependent Role="ZamowienieKlienta">
+              <PropertyRef Name="ZamowienieID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FirmaKursyModelStoreContainer">
+          <EntitySet Name="Klient" EntityType="Self.Klient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kurs" EntityType="Self.Kurs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Typ" EntityType="Self.Typ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Zamowienie" EntityType="Self.Zamowienie" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ZamowienieKlienta" EntityType="Self.ZamowienieKlienta" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ZamowienieKlienta].[ZamowienieID] AS [ZamowienieID], 
+    [ZamowienieKlienta].[KursID] AS [KursID], 
+    [ZamowienieKlienta].[Ilość] AS [Ilość], 
+    [ZamowienieKlienta].[RabatProc] AS [RabatProc]
+    FROM [dbo].[ZamowienieKlienta] AS [ZamowienieKlienta]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Kurs_Typ" Association="Self.FK_Kurs_Typ">
+            <End Role="Typ" EntitySet="Typ" />
+            <End Role="Kurs" EntitySet="Kurs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Zamowienie_Klient" Association="Self.FK_Zamowienie_Klient">
+            <End Role="Klient" EntitySet="Klient" />
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Zamowienie_Kurs" Association="Self.FK_Zamowienie_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ZamowienieKlienta_Kurs" Association="Self.FK_ZamowienieKlienta_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="ZamowienieKlienta" EntitySet="ZamowienieKlienta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ZamowienieKlienta_Zamowienie" Association="Self.FK_ZamowienieKlienta_Zamowienie">
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+            <End Role="ZamowienieKlienta" EntitySet="ZamowienieKlienta" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FirmaKursyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Klient">
+          <Key>
+            <PropertyRef Name="KlientID" />
+          </Key>
+          <Property Name="KlientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Imię" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Nazwisko" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NazwaFirmy" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="NrTelefonu" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="AdresMail" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ZgodaNaNewsletter" Type="Boolean" Nullable="false" />
+          <Property Name="Adres" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Zamowienie" Relationship="Self.FK_Zamowienie_Klient" FromRole="Klient" ToRole="Zamowienie" />
+        </EntityType>
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="KursID" />
+          </Key>
+          <Property Name="KursID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NazwaKursu" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TypID" Type="Int32" Nullable="false" />
+          <Property Name="Cena" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Typ" Relationship="Self.FK_Kurs_Typ" FromRole="Kurs" ToRole="Typ" />
+          <NavigationProperty Name="Zamowienie" Relationship="Self.FK_Zamowienie_Kurs" FromRole="Kurs" ToRole="Zamowienie" />
+          <NavigationProperty Name="ZamowienieKlienta" Relationship="Self.FK_ZamowienieKlienta_Kurs" FromRole="Kurs" ToRole="ZamowienieKlienta" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Typ">
+          <Key>
+            <PropertyRef Name="TypID" />
+          </Key>
+          <Property Name="TypID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NazwaTypu" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Kurs" Relationship="Self.FK_Kurs_Typ" FromRole="Typ" ToRole="Kurs" />
+        </EntityType>
+        <EntityType Name="Zamowienie">
+          <Key>
+            <PropertyRef Name="ZamowienieID" />
+          </Key>
+          <Property Name="ZamowienieID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DataZamowienia" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CzyZrealizowane" Type="Boolean" Nullable="false" />
+          <Property Name="KlientID" Type="Int32" Nullable="false" />
+          <Property Name="KursID" Type="Int32" Nullable="false" />
+          <Property Name="CzyFaktura" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Klient" Relationship="Self.FK_Zamowienie_Klient" FromRole="Zamowienie" ToRole="Klient" />
+          <NavigationProperty Name="Kurs" Relationship="Self.FK_Zamowienie_Kurs" FromRole="Zamowienie" ToRole="Kurs" />
+          <NavigationProperty Name="ZamowienieKlienta" Relationship="Self.FK_ZamowienieKlienta_Zamowienie" FromRole="Zamowienie" ToRole="ZamowienieKlienta" />
+        </EntityType>
+        <EntityType Name="ZamowienieKlienta">
+          <Key>
+            <PropertyRef Name="ZamowienieID" />
+            <PropertyRef Name="KursID" />
+            <PropertyRef Name="Ilość" />
+            <PropertyRef Name="RabatProc" />
+          </Key>
+          <Property Name="ZamowienieID" Type="Int32" Nullable="false" />
+          <Property Name="KursID" Type="Int32" Nullable="false" />
+          <Property Name="Ilość" Type="Int32" Nullable="false" />
+          <Property Name="RabatProc" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Kurs" Relationship="Self.FK_ZamowienieKlienta_Kurs" FromRole="ZamowienieKlienta" ToRole="Kurs" />
+          <NavigationProperty Name="Zamowienie" Relationship="Self.FK_ZamowienieKlienta_Zamowienie" FromRole="ZamowienieKlienta" ToRole="Zamowienie" />
+        </EntityType>
+        <Association Name="FK_Zamowienie_Klient">
+          <End Role="Klient" Type="Self.Klient" Multiplicity="1" />
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Klient">
+              <PropertyRef Name="KlientID" />
+            </Principal>
+            <Dependent Role="Zamowienie">
+              <PropertyRef Name="KlientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Kurs_Typ">
+          <End Role="Typ" Type="Self.Typ" Multiplicity="1" />
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Typ">
+              <PropertyRef Name="TypID" />
+            </Principal>
+            <Dependent Role="Kurs">
+              <PropertyRef Name="TypID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Zamowienie_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="KursID" />
+            </Principal>
+            <Dependent Role="Zamowienie">
+              <PropertyRef Name="KursID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ZamowienieKlienta_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="ZamowienieKlienta" Type="Self.ZamowienieKlienta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="KursID" />
+            </Principal>
+            <Dependent Role="ZamowienieKlienta">
+              <PropertyRef Name="KursID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ZamowienieKlienta_Zamowienie">
+          <End Role="Zamowienie" Type="Self.Zamowienie" Multiplicity="1" />
+          <End Role="ZamowienieKlienta" Type="Self.ZamowienieKlienta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zamowienie">
+              <PropertyRef Name="ZamowienieID" />
+            </Principal>
+            <Dependent Role="ZamowienieKlienta">
+              <PropertyRef Name="ZamowienieID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FirmaKursyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Klient" EntityType="Self.Klient" />
+          <EntitySet Name="Kurs" EntityType="Self.Kurs" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Typ" EntityType="Self.Typ" />
+          <EntitySet Name="Zamowienie" EntityType="Self.Zamowienie" />
+          <EntitySet Name="ZamowienieKlienta" EntityType="Self.ZamowienieKlienta" />
+          <AssociationSet Name="FK_Zamowienie_Klient" Association="Self.FK_Zamowienie_Klient">
+            <End Role="Klient" EntitySet="Klient" />
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Kurs_Typ" Association="Self.FK_Kurs_Typ">
+            <End Role="Typ" EntitySet="Typ" />
+            <End Role="Kurs" EntitySet="Kurs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Zamowienie_Kurs" Association="Self.FK_Zamowienie_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ZamowienieKlienta_Kurs" Association="Self.FK_ZamowienieKlienta_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="ZamowienieKlienta" EntitySet="ZamowienieKlienta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ZamowienieKlienta_Zamowienie" Association="Self.FK_ZamowienieKlienta_Zamowienie">
+            <End Role="Zamowienie" EntitySet="Zamowienie" />
+            <End Role="ZamowienieKlienta" EntitySet="ZamowienieKlienta" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FirmaKursyModelStoreContainer" CdmEntityContainer="FirmaKursyEntities">
+          <EntitySetMapping Name="Klient">
+            <EntityTypeMapping TypeName="FirmaKursyModel.Klient">
+              <MappingFragment StoreEntitySet="Klient">
+                <ScalarProperty Name="KlientID" ColumnName="KlientID" />
+                <ScalarProperty Name="Imię" ColumnName="Imię" />
+                <ScalarProperty Name="Nazwisko" ColumnName="Nazwisko" />
+                <ScalarProperty Name="NazwaFirmy" ColumnName="NazwaFirmy" />
+                <ScalarProperty Name="NrTelefonu" ColumnName="NrTelefonu" />
+                <ScalarProperty Name="AdresMail" ColumnName="AdresMail" />
+                <ScalarProperty Name="ZgodaNaNewsletter" ColumnName="ZgodaNaNewsletter" />
+                <ScalarProperty Name="Adres" ColumnName="Adres" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kurs">
+            <EntityTypeMapping TypeName="FirmaKursyModel.Kurs">
+              <MappingFragment StoreEntitySet="Kurs">
+                <ScalarProperty Name="KursID" ColumnName="KursID" />
+                <ScalarProperty Name="NazwaKursu" ColumnName="NazwaKursu" />
+                <ScalarProperty Name="TypID" ColumnName="TypID" />
+                <ScalarProperty Name="Cena" ColumnName="Cena" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="FirmaKursyModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Typ">
+            <EntityTypeMapping TypeName="FirmaKursyModel.Typ">
+              <MappingFragment StoreEntitySet="Typ">
+                <ScalarProperty Name="TypID" ColumnName="TypID" />
+                <ScalarProperty Name="NazwaTypu" ColumnName="NazwaTypu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Zamowienie">
+            <EntityTypeMapping TypeName="FirmaKursyModel.Zamowienie">
+              <MappingFragment StoreEntitySet="Zamowienie">
+                <ScalarProperty Name="ZamowienieID" ColumnName="ZamowienieID" />
+                <ScalarProperty Name="DataZamowienia" ColumnName="DataZamowienia" />
+                <ScalarProperty Name="CzyZrealizowane" ColumnName="CzyZrealizowane" />
+                <ScalarProperty Name="KlientID" ColumnName="KlientID" />
+                <ScalarProperty Name="KursID" ColumnName="KursID" />
+                <ScalarProperty Name="CzyFaktura" ColumnName="CzyFaktura" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ZamowienieKlienta">
+            <EntityTypeMapping TypeName="FirmaKursyModel.ZamowienieKlienta">
+              <MappingFragment StoreEntitySet="ZamowienieKlienta">
+                <ScalarProperty Name="ZamowienieID" ColumnName="ZamowienieID" />
+                <ScalarProperty Name="KursID" ColumnName="KursID" />
+                <ScalarProperty Name="Ilość" ColumnName="Ilość" />
+                <ScalarProperty Name="RabatProc" ColumnName="RabatProc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
