@@ -7,6 +7,4 @@ Do połączenia z bazą danych użyty został Entity Framework, ponieważ pozwal
 
 Aplikacja może posłużyć firmie np do szybkiego wysyłania newsletterów do użytkowników, którzy wyrazili zgodę na wysłanie do nich newslettera (a ta informacja została odnotowana w bazie danych). 
 
-Kod programu znajduje się w pliku projektInformatyczny.sln, przeznaczonego do otwarcia np w Visual Studio.
-
-## Kod programu od strony mechaniki działania aplikacji (backend) znajduje się w pliku o nazwie "kod aplikacji". Można go tam podejrzeć bez potrzeby otwierania plików w zewnętrznych programach.  
+## Kod programu od strony mechaniki działania aplikacji (backend) znajduje się w pliku o nazwie "MainWindow.xaml.cs". 
